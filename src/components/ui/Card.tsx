@@ -1,8 +1,9 @@
-import { HTMLAttributes } from 'react';
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
+  children?: ReactNode;
   hover?: boolean;
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
@@ -21,22 +22,15 @@ export default function Card({
     lg: 'p-8',
   };
 
-  const Component = hover ? motion.div : 'div';
-  const motionProps = hover
-    ? {
-        whileHover: { y: -2 },
-        transition: { duration: 0.2 },
-      }
-    : {};
-
   return (
-    <Component
+    <motion.div
       className={clsx('card', paddingStyles[padding], className)}
-      {...motionProps}
+      whileHover={hover ? { y: -2 } : undefined}
+      transition={hover ? { duration: 0.2 } : undefined}
       {...props}
     >
       {children}
-    </Component>
+    </motion.div>
   );
 }
 

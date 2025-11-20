@@ -148,9 +148,7 @@ export const handlers = [
     return HttpResponse.json(booking);
   }),
 
-  http.delete('/api/bookings/:id', ({ params }) => {
-    return HttpResponse.json({ success: true });
-  }),
+  http.delete('/api/bookings/:id', () => HttpResponse.json({ success: true })),
 
   // Products
   http.get('/api/products', () => {

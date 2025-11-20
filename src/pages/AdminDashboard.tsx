@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import Input from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
 
 export default function AdminDashboard() {

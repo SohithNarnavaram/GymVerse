@@ -19,7 +19,7 @@ import {
 import type { BodyMeasurement, WorkoutPlan } from '@/types';
 
 export default function Profile() {
-  const { user, updateUser } = useAuthStore();
+  const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'bms' | 'weight' | 'workout' | 'prefs'>('bms');
   const [measurements, setMeasurements] = useState<BodyMeasurement[]>([]);
   const [weightHistory, setWeightHistory] = useState<Array<{ date: string; weight: number }>>([]);
@@ -413,13 +413,7 @@ export default function Profile() {
                   barSize={12}
                   data={bodyFocus}
                 >
-                  <RadialBar
-                    minAngle={15}
-                    background
-                    clockWise
-                    dataKey="value"
-                    cornerRadius={12}
-                  />
+                  <RadialBar background dataKey="value" cornerRadius={12} />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#0f0a14', border: '1px solid #1f1b2e' }}
                     labelStyle={{ color: '#fff' }}

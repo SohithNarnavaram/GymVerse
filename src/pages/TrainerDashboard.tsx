@@ -5,15 +5,13 @@ import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
-import type { Slot, TrainerNote } from '@/types';
+import type { Slot } from '@/types';
 
 export default function TrainerDashboard() {
   const { showToast } = useToast();
   const [todayClasses, setTodayClasses] = useState<Slot[]>([]);
-  const [selectedClass, setSelectedClass] = useState<Slot | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [noteContent, setNoteContent] = useState('');
-  const [selectedMember, setSelectedMember] = useState<string | null>(null);
 
   useEffect(() => {
     // Mock today's classes
@@ -52,7 +50,7 @@ export default function TrainerDashboard() {
     { id: '3', name: 'Bob Johnson', checkedIn: false },
   ];
 
-  const handleQuickCheckIn = (memberId: string) => {
+  const handleQuickCheckIn = (_memberId: string) => {
     showToast({
       variant: 'success',
       title: 'Checked in',
@@ -60,8 +58,7 @@ export default function TrainerDashboard() {
     });
   };
 
-  const handleAddNote = (memberId: string) => {
-    setSelectedMember(memberId);
+  const handleAddNote = () => {
     setIsNoteModalOpen(true);
   };
 
@@ -74,7 +71,6 @@ export default function TrainerDashboard() {
     });
     setIsNoteModalOpen(false);
     setNoteContent('');
-    setSelectedMember(null);
   };
 
   return (
@@ -130,11 +126,7 @@ export default function TrainerDashboard() {
                             Checked in
                           </span>
                         )}
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleAddNote(attendee.id)}
-                        >
+                        <Button size="sm" variant="ghost" onClick={handleAddNote}>
                           Add Note
                         </Button>
                       </div>
@@ -153,7 +145,6 @@ export default function TrainerDashboard() {
         onClose={() => {
           setIsNoteModalOpen(false);
           setNoteContent('');
-          setSelectedMember(null);
         }}
         title="Add Note"
         size="md"
@@ -174,7 +165,6 @@ export default function TrainerDashboard() {
               onClick={() => {
                 setIsNoteModalOpen(false);
                 setNoteContent('');
-                setSelectedMember(null);
               }}
             >
               Cancel
