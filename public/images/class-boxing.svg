@@ -1,0 +1,16 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="classBoxingBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f2027"/>
+      <stop offset="50%" stop-color="#203a43"/>
+      <stop offset="100%" stop-color="#2c5364"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="36" fill="url(#classBoxingBg)"/>
+  <circle cx="160" cy="40" r="24" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="50" cy="160" r="26" fill="rgba(255,255,255,0.05)"/>
+  <path d="M70 70C70 58.954 78.9543 50 90 50H126C137.046 50 146 58.9543 146 70V104C146 115.046 137.046 124 126 124H90C78.9543 124 70 115.046 70 104V70Z" fill="rgba(255,255,255,0.18)"/>
+  <rect x="82" y="64" width="24" height="60" rx="12" fill="rgba(255,255,255,0.35)"/>
+  <rect x="110" y="64" width="24" height="60" rx="12" fill="rgba(255,255,255,0.35)"/>
+  <path d="M88 130H132" stroke="#ff6b6b" stroke-width="8" stroke-linecap="round"/>
+</svg>

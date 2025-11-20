@@ -1,0 +1,14 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prodBands" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7971e"/>
+      <stop offset="100%" stop-color="#ffd200"/>
+    </linearGradient>
+  </defs>
+  <rect width="220" height="220" rx="36" fill="url(#prodBands)"/>
+  <rect x="60" y="90" width="48" height="60" rx="14" fill="rgba(0,0,0,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="4"/>
+  <rect x="112" y="70" width="48" height="80" rx="14" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.25)" stroke-width="4"/>
+  <path d="M70 110H98" stroke="rgba(255,255,255,0.6)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M122 90H150" stroke="rgba(255,255,255,0.6)" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="164" cy="54" r="18" fill="rgba(255,255,255,0.18)"/>
+</svg>

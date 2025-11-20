@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="classHiitBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff512f"/>
+      <stop offset="100%" stop-color="#dd2476"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="36" fill="url(#classHiitBg)"/>
+  <circle cx="150" cy="60" r="30" fill="rgba(0,0,0,0.15)"/>
+  <path d="M60 140L96 60H112L140 140H122L116 124H86L80 140H60Z" fill="rgba(255,255,255,0.85)"/>
+  <rect x="90" y="120" width="22" height="36" rx="11" fill="rgba(0,0,0,0.2)"/>
+  <circle cx="70" cy="70" r="20" fill="rgba(255,255,255,0.18)"/>
+</svg>

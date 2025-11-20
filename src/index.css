@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-gray-100 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #000000;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    letter-spacing: -0.02em;
+  }
+  
+  * {
+    @apply border-gray-800/30;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-500 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-600;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn text-white focus:ring-primary-500 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold;
+    background: linear-gradient(to right, #471396, #5A1BB8, #6D23DA);
+    box-shadow: 0 10px 15px -3px rgba(71, 19, 150, 0.5), 0 4px 6px -2px rgba(71, 19, 150, 0.4);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(to right, #5A1BB8, #6D23DA, #802BFC);
+    box-shadow: 0 20px 25px -5px rgba(71, 19, 150, 0.6), 0 10px 10px -5px rgba(71, 19, 150, 0.5);
+  }
+
+  .btn-secondary {
+    @apply btn text-gray-100 border border-gray-800 hover:border-gray-700 hover:text-white focus:ring-primary-500 shadow-lg shadow-black/50 hover:shadow-xl transition-all font-medium;
+    background-color: #1A1A1A;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #262626;
+  }
+
+  .btn-accent {
+    @apply btn text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold;
+    background: linear-gradient(to right, #00D9FF, #00B8E6, #0097CC);
+    box-shadow: 0 10px 15px -3px rgba(0, 217, 255, 0.5), 0 4px 6px -2px rgba(0, 217, 255, 0.4);
+  }
+  
+  .btn-accent:focus {
+    @apply outline-none ring-2 ring-offset-2;
+    --tw-ring-color: #00D9FF;
+  }
+  
+  .btn-accent:hover {
+    background: linear-gradient(to right, #00B8E6, #0097CC, #0076B3);
+    box-shadow: 0 20px 25px -5px rgba(0, 217, 255, 0.6), 0 10px 10px -5px rgba(0, 217, 255, 0.5);
+  }
+  
+  .btn-outline {
+    @apply btn border-2 border-primary-500 text-primary-400 hover:bg-primary-500/20 hover:border-primary-500 hover:text-primary-300 focus:ring-primary-500 shadow-lg shadow-black/50 hover:shadow-xl transition-all font-medium;
+  }
+  
+  .btn-ghost {
+    @apply btn border border-primary-500/40 text-primary-400 focus:ring-primary-500 transition-all font-semibold;
+    background-color: transparent;
+  }
+
+  .btn-ghost:hover {
+    background-color: #471396;
+    color: #ffffff;
+    border-color: #471396;
+    box-shadow: 0 10px 20px -10px rgba(71, 19, 150, 0.8);
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-gray-800 px-4 py-3 text-sm text-gray-100 placeholder:text-gray-500 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 transition-all hover:border-gray-700 font-medium;
+    background-color: #1A1A1A;
+  }
+  
+  .input:focus {
+    background-color: #262626;
+  }
+  
+  .input:hover {
+    background-color: #1F1F1F;
+  }
+
+  .card {
+    @apply rounded-2xl shadow-2xl border border-gray-900 p-6 hover:shadow-[0_20px_50px_-12px_rgba(71,19,150,0.3)] hover:border-gray-800 transition-all duration-300;
+    background-color: #0A0A0A;
+  }
+  
+  .card-gradient {
+    @apply rounded-2xl shadow-2xl p-6 text-white relative overflow-hidden;
+    background: linear-gradient(to bottom right, #471396, #5A1BB8, #6D23DA);
+    box-shadow: 0 25px 50px -12px rgba(71, 19, 150, 0.6);
+  }
+  
+  .card-gradient::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/10 to-transparent;
+  }
+  
+  .card-accent {
+    @apply rounded-2xl shadow-2xl p-6 text-white relative overflow-hidden;
+    background: linear-gradient(to bottom right, #00D9FF, #00B8E6, #0097CC);
+    box-shadow: 0 25px 50px -12px rgba(0, 217, 255, 0.6);
+  }
+  
+  .card-accent::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/10 to-transparent;
+  }
+}
+
+/* Mobile-first responsive utilities */
+@layer utilities {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+

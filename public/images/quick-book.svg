@@ -1,0 +1,20 @@
+<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#471396"/>
+      <stop offset="100%" stop-color="#7A33FF"/>
+    </linearGradient>
+    <linearGradient id="bookAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D9FF"/>
+      <stop offset="100%" stop-color="#7A33FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="32" fill="url(#bookGradient)"/>
+  <circle cx="40" cy="50" r="18" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="130" cy="120" r="22" fill="rgba(0,217,255,0.15)"/>
+  <path d="M40 110C40 98.954 48.954 90 60 90H120C126.627 90 132 95.3726 132 102V122C132 128.627 126.627 134 120 134H60C48.9543 134 40 125.046 40 114V110Z" fill="rgba(0,0,0,0.15)"/>
+  <rect x="36" y="36" width="88" height="58" rx="12" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.15)" stroke-width="4"/>
+  <path d="M52 50H108M52 66H96" stroke="url(#bookAccent)" stroke-width="6" stroke-linecap="round"/>
+  <rect x="66" y="82" width="68" height="32" rx="16" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.08)"/>
+  <path d="M82 98H118" stroke="url(#bookAccent)" stroke-width="6" stroke-linecap="round"/>
+</svg>

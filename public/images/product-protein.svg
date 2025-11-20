@@ -1,0 +1,14 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prodProtein" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9966"/>
+      <stop offset="100%" stop-color="#ff5e62"/>
+    </linearGradient>
+  </defs>
+  <rect width="220" height="220" rx="36" fill="url(#prodProtein)"/>
+  <path d="M90 60C90 51.1634 97.1634 44 106 44H144C152.837 44 160 51.1634 160 60V156C160 164.837 152.837 172 144 172H106C97.1634 172 90 164.837 90 156V60Z" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.2)" stroke-width="4"/>
+  <rect x="100" y="68" width="50" height="20" rx="10" fill="rgba(255,255,255,0.75)"/>
+  <rect x="104" y="104" width="42" height="12" rx="6" fill="rgba(255,255,255,0.35)"/>
+  <rect x="104" y="124" width="42" height="12" rx="6" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="74" cy="150" r="32" fill="rgba(255,255,255,0.2)"/>
+</svg>

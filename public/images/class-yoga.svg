@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="classYogaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4d2dd4"/>
+      <stop offset="100%" stop-color="#8c52ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="36" fill="url(#classYogaBg)"/>
+  <circle cx="160" cy="40" r="30" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="40" cy="140" r="26" fill="rgba(255,255,255,0.05)"/>
+  <path d="M100 60C112 60 116 72 116 82C116 92 108 96 108 96C115 110 138 128 138 140C138 150 126 156 112 156C102 156 92 152 86 146C86 146 80 152 68 152C52 152 44 142 44 132C44 118 70 102 78 96C78 96 66 90 66 78C66 68 78 60 90 60H100Z" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="104" cy="48" r="18" fill="rgba(255,255,255,0.45)"/>
+</svg>
