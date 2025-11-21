@@ -188,7 +188,7 @@ function AdminDashboardView() {
 
     // Mock revenue data (in Indian Rupees)
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const mockRevenue: RevenueData[] = months.slice(-6).map((month, index) => ({
+    const mockRevenue: RevenueData[] = months.slice(-6).map((month) => ({
       month,
       revenue: Math.floor(Math.random() * 200000) + 300000, // ₹3-5 lakhs
       memberships: Math.floor(Math.random() * 100000) + 200000, // ₹2-3 lakhs

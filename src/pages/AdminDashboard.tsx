@@ -7,7 +7,6 @@ import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
-import { useAuthStore } from '@/store/authStore';
 
 interface Member {
   id: string;
@@ -38,7 +37,6 @@ interface Trainer {
 
 export default function AdminDashboard() {
   const { showToast } = useToast();
-  const { user } = useAuthStore();
   const navigate = useNavigate();
   
   // Modals
@@ -54,18 +52,29 @@ export default function AdminDashboard() {
   
   // Form data
   const [exportType, setExportType] = useState<'classes' | 'members' | 'attendance'>('members');
-  const [memberFormData, setMemberFormData] = useState({
+  const [memberFormData, setMemberFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    membershipPlan: string;
+    membershipStatus: 'active' | 'expired' | 'pending' | 'cancelled';
+  }>({
     name: '',
     email: '',
     phone: '',
     membershipPlan: 'Basic',
-    membershipStatus: 'active' as const,
+    membershipStatus: 'active',
   });
-  const [trainerFormData, setTrainerFormData] = useState({
+  const [trainerFormData, setTrainerFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    status: 'active' | 'inactive';
+  }>({
     name: '',
     email: '',
     phone: '',
-    status: 'active' as const,
+    status: 'active',
   });
   
   // Data

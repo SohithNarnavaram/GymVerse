@@ -85,7 +85,7 @@ const initialTasks: ControlTask[] = [
 export default function TrainerDashboard() {
   const { user } = useAuthStore();
   const { showToast } = useToast();
-  const [members, setMembers] = useState<AssignedMember[]>(initialMembers);
+  const [members] = useState<AssignedMember[]>(initialMembers);
   const [tasks, setTasks] = useState<ControlTask[]>(initialTasks);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [noteContent, setNoteContent] = useState('');
@@ -224,14 +224,15 @@ export default function TrainerDashboard() {
               <UserPlusIcon className="h-6 w-6 text-primary-400 mb-3" />
               <h3 className="text-lg font-semibold text-white">{item.title}</h3>
               <p className="text-sm text-gray-400 mt-1 flex-1">{item.detail}</p>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-4 text-primary-300 hover:text-white"
-                asChild
-              >
-                <a href={item.href}>{item.action}</a>
-              </Button>
+              <a href={item.href}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-4 text-primary-300 hover:text-white"
+                >
+                  {item.action}
+                </Button>
+              </a>
             </div>
           </Card>
         ))}
