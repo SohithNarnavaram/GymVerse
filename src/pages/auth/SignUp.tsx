@@ -7,6 +7,8 @@ import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
 import Modal from '@/components/ui/Modal';
 
+type UserRole = 'member' | 'trainer' | 'admin';
+
 export default function SignUp() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -19,6 +21,7 @@ export default function SignUp() {
     password: '',
     confirmPassword: '',
   });
+  const [selectedRole, setSelectedRole] = useState<UserRole>('member');
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,7 +55,7 @@ export default function SignUp() {
         email: formData.email,
         phone: formData.phone,
         name: formData.name,
-        role: 'member' as const,
+        role: selectedRole,
         createdAt: new Date().toISOString(),
       };
       login(mockUser, 'mock-token');
@@ -61,7 +64,15 @@ export default function SignUp() {
         title: 'Welcome to GymVerse!',
         description: "You're all set — see you in class!",
       });
-      navigate('/dashboard');
+      
+      // Redirect based on role
+      if (selectedRole === 'admin') {
+        navigate('/dashboard');
+      } else if (selectedRole === 'trainer') {
+        navigate('/trainer');
+      } else {
+        navigate('/dashboard');
+      }
       setIsLoading(false);
     }, 1000);
   };
@@ -80,6 +91,32 @@ export default function SignUp() {
 
         <Card>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Role Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sign Up As
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['member', 'trainer', 'admin'] as UserRole[]).map((role) => (
+                  <button
+                    key={role}
+                    type="button"
+                    onClick={() => setSelectedRole(role)}
+                    className={`
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200
+                      ${
+                        selectedRole === role
+                          ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/50'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                      }
+                    `}
+                  >
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Input
               label="Full Name"
               type="text"
@@ -106,7 +143,7 @@ export default function SignUp() {
               required
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+1 (555) 123-4567"
+              placeholder="+91 98765 43210"
               autoComplete="tel"
             />
 

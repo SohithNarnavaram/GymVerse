@@ -12,6 +12,7 @@ import TrainerDashboard from './pages/TrainerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Store from './pages/Store';
 import Profile from './pages/Profile';
+import Plans from './pages/Plans';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -88,6 +89,18 @@ function App() {
             <RoleRoute allowedRoles={['admin']}>
               <Layout>
                 <AdminDashboard />
+              </Layout>
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/plans"
+        element={
+          <ProtectedRoute>
+            <RoleRoute allowedRoles={['admin']}>
+              <Layout>
+                <Plans />
               </Layout>
             </RoleRoute>
           </ProtectedRoute>

@@ -115,7 +115,7 @@ export default function CheckIn() {
 
       {/* Check-in Options */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Card hover className="text-center cursor-pointer bg-[#171717] border border-[#252525]" onClick={handleQRScan}>
+        <Card hover className="text-center cursor-pointer bg-[#0a0a0a] border border-[#252525]" onClick={handleQRScan}>
           <div className="mb-4">
             <ImageWithFallback
               src={CHECKIN_VISUALS.qr}
@@ -129,7 +129,7 @@ export default function CheckIn() {
           <p className="text-sm text-gray-300">Quick and easy check-in</p>
         </Card>
 
-        <Card hover className="text-center cursor-pointer bg-[#171717] border border-[#252525]" onClick={handleManualCheckIn}>
+        <Card hover className="text-center cursor-pointer bg-[#0a0a0a] border border-[#252525]" onClick={handleManualCheckIn}>
           <div className="mb-4">
             <ImageWithFallback
               src={CHECKIN_VISUALS.manual}
@@ -208,12 +208,12 @@ export default function CheckIn() {
         <h2 className="text-xl font-black text-white mb-4 tracking-tight">Recent Check-ins</h2>
         <div className="space-y-3">
             {attendanceHistory.length === 0 ? (
-             <Card className="bg-[#171717] border border-[#252525]">
+            <Card className="bg-[#0a0a0a] border border-[#252525]">
               <p className="text-center text-gray-400 py-8">No check-ins yet</p>
             </Card>
           ) : (
             attendanceHistory.map((record) => (
-               <Card key={record.id} className="bg-[#171717] border border-[#252525]">
+              <Card key={record.id} className="bg-[#0a0a0a] border border-[#252525]">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-bold text-white">

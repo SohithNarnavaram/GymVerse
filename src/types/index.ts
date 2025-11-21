@@ -34,6 +34,7 @@ export interface Slot {
   location?: string;
   description?: string;
   imageUrl?: string;
+  createdAt?: string; // ISO
 }
 
 export interface Booking {

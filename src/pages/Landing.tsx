@@ -12,7 +12,7 @@ export default function Landing() {
     {
       id: 'basic',
       name: 'Basic',
-      price: 49,
+      price: 2999,
       duration: 'month',
       features: ['Access to all classes', 'Basic equipment', 'Mobile app access'],
       popular: false,
@@ -20,7 +20,7 @@ export default function Landing() {
     {
       id: 'premium',
       name: 'Premium',
-      price: 89,
+      price: 5999,
       duration: 'month',
       features: [
         'Unlimited classes',
@@ -34,7 +34,7 @@ export default function Landing() {
     {
       id: 'elite',
       name: 'Elite',
-      price: 149,
+      price: 9999,
       duration: 'month',
       features: [
         'Everything in Premium',
@@ -221,7 +221,7 @@ export default function Landing() {
                   <div className="text-center relative z-10">
                     <h3 className="text-2xl font-extrabold text-white mb-2">{plan.name}</h3>
                     <div className="mt-4">
-                      <span className="text-5xl font-extrabold bg-gradient-to-r from-primary-400 to-primary-300 bg-clip-text text-transparent">${plan.price}</span>
+                      <span className="text-5xl font-extrabold bg-gradient-to-r from-primary-400 to-primary-300 bg-clip-text text-transparent">₹{plan.price.toLocaleString('en-IN')}</span>
                       <span className="text-gray-400 ml-2">/{plan.duration}</span>
                     </div>
                     <ul className="mt-8 space-y-4 text-left">

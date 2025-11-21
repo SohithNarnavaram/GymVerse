@@ -6,6 +6,8 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
 
+type UserRole = 'member' | 'trainer' | 'admin';
+
 export default function SignIn() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -14,6 +16,7 @@ export default function SignIn() {
     email: '',
     password: '',
   });
+  const [selectedRole, setSelectedRole] = useState<UserRole>('member');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +30,7 @@ export default function SignIn() {
         id: '1',
         email: formData.email,
         name: 'John Doe',
-        role: 'member' as const,
+        role: selectedRole,
         createdAt: new Date().toISOString(),
       };
       login(mockUser, 'mock-token');
@@ -36,7 +39,15 @@ export default function SignIn() {
         title: 'Welcome back!',
         description: "You're all set — let's get moving!",
       });
-      navigate('/dashboard');
+      
+      // Redirect based on role
+      if (selectedRole === 'admin') {
+        navigate('/dashboard');
+      } else if (selectedRole === 'trainer') {
+        navigate('/trainer');
+      } else {
+        navigate('/dashboard');
+      }
       setIsLoading(false);
     }, 1000);
   };
@@ -55,6 +66,32 @@ export default function SignIn() {
 
         <Card>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Role Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Login As
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['member', 'trainer', 'admin'] as UserRole[]).map((role) => (
+                  <button
+                    key={role}
+                    type="button"
+                    onClick={() => setSelectedRole(role)}
+                    className={`
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200
+                      ${
+                        selectedRole === role
+                          ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/50'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                      }
+                    `}
+                  >
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Input
               label="Email"
               type="email"
