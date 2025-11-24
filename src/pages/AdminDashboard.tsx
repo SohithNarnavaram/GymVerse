@@ -8,7 +8,6 @@ import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
 import { useBranchStore } from '@/store/branchStore';
-import type { Branch } from '@/types';
 
 interface Member {
   id: string;

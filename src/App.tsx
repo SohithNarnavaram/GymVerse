@@ -39,7 +39,6 @@ function RoleRoute({
 }
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuthStore();
   const { selectedBranch, branches, hasMultipleBranches } = useBranchStore();
   const location = useLocation();
 

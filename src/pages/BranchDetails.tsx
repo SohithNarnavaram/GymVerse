@@ -10,7 +10,6 @@ import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import {
   MapPinIcon,
-  BuildingOfficeIcon,
   UsersIcon,
   UserGroupIcon,
   ChartBarIcon,
@@ -193,7 +192,6 @@ export default function BranchDetails() {
     );
   }
 
-  const activeMembers = members.filter((m) => m.membershipStatus === 'active').length;
   const totalRevenue = 388166; // Mock revenue
   const monthlyGrowth = 15; // Mock growth percentage
 
