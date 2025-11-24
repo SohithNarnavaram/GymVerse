@@ -1,6 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
+import { useBranchStore } from './store/branchStore';
 import { ToastProvider } from './components/ui/Toast';
+import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout';
 import Landing from './pages/Landing';
 import SignIn from './pages/auth/SignIn';
@@ -10,6 +12,9 @@ import Classes from './pages/Classes';
 import CheckIn from './pages/CheckIn';
 import TrainerDashboard from './pages/TrainerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import BranchSelection from './pages/BranchSelection';
+import BranchesDashboard from './pages/BranchesDashboard';
+import BranchDetails from './pages/BranchDetails';
 import Store from './pages/Store';
 import Profile from './pages/Profile';
 import Plans from './pages/Plans';
@@ -33,9 +38,34 @@ function RoleRoute({
   return <>{children}</>;
 }
 
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStore();
+  const { selectedBranch, branches, hasMultipleBranches } = useBranchStore();
+  const location = useLocation();
+
+  // Allow access to branch selection and branches dashboard without branch selection
+  if (location.pathname === '/admin/branches/select' || location.pathname === '/admin/branches') {
+    return <>{children}</>;
+  }
+
+  // If branches are loaded and admin has multiple branches but no branch is selected, redirect to selection
+  if (branches.length > 0 && hasMultipleBranches() && !selectedBranch) {
+    return <Navigate to="/admin/branches/select" replace />;
+  }
+
+  // If branches are loaded and there's only one branch, auto-select it
+  if (branches.length === 1 && !selectedBranch) {
+    // This will be handled by the branch selection page
+    return <>{children}</>;
+  }
+
+  return <>{children}</>;
+}
+
 function App() {
   return (
     <ToastProvider>
+      <ScrollToTop />
       <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/signin" element={<SignIn />} />
@@ -83,13 +113,51 @@ function App() {
         }
       />
       <Route
-        path="/admin"
+        path="/admin/branches/select"
         element={
           <ProtectedRoute>
             <RoleRoute allowedRoles={['admin']}>
               <Layout>
-                <AdminDashboard />
+                <BranchSelection />
               </Layout>
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/branches/:branchId"
+        element={
+          <ProtectedRoute>
+            <RoleRoute allowedRoles={['admin']}>
+              <Layout>
+                <BranchDetails />
+              </Layout>
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/branches"
+        element={
+          <ProtectedRoute>
+            <RoleRoute allowedRoles={['admin']}>
+              <Layout>
+                <BranchesDashboard />
+              </Layout>
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <RoleRoute allowedRoles={['admin']}>
+              <AdminRoute>
+                <Layout>
+                  <AdminDashboard />
+                </Layout>
+              </AdminRoute>
             </RoleRoute>
           </ProtectedRoute>
         }

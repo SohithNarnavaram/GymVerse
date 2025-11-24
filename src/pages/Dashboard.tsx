@@ -2,10 +2,13 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format, startOfWeek, addDays, isSameDay, isToday, isTomorrow } from 'date-fns';
 import { useAuthStore } from '@/store/authStore';
+import { useBranchStore } from '@/store/branchStore';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
-import { CalendarIcon, UserGroupIcon, ChartBarIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { useToast } from '@/components/ui/Toast';
+import { CalendarIcon, UserGroupIcon, ChartBarIcon, ClockIcon, BuildingOfficeIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/outline';
 import type { Slot } from '@/types';
 import {
   LineChart,
@@ -64,19 +67,22 @@ interface RevenueData {
 // Admin Dashboard Component - Stats and Analytics
 function AdminDashboardView() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { selectedBranch, branches, hasMultipleBranches, selectBranch } = useBranchStore();
   const [members, setMembers] = useState<Member[]>([]);
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
   const [selectedDateRange, setSelectedDateRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [isBranchSelectModalOpen, setIsBranchSelectModalOpen] = useState(false);
 
   useEffect(() => {
     // Mock members data
     const mockMembers: Member[] = [
       {
         id: '1',
-        name: 'John Doe',
-        email: 'john@example.com',
+        name: 'Rahul Sharma',
+        email: 'rahul.sharma@example.com',
         membershipStatus: 'active',
         membershipPlan: 'Premium',
         membershipExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -87,8 +93,8 @@ function AdminDashboardView() {
       },
       {
         id: '2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
+        name: 'Priya Patel',
+        email: 'priya.patel@example.com',
         membershipStatus: 'active',
         membershipPlan: 'Elite',
         membershipExpiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
@@ -99,8 +105,8 @@ function AdminDashboardView() {
       },
       {
         id: '3',
-        name: 'Bob Johnson',
-        email: 'bob@example.com',
+        name: 'Arjun Reddy',
+        email: 'arjun.reddy@example.com',
         membershipStatus: 'expired',
         membershipPlan: 'Basic',
         membershipExpiresAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
@@ -110,8 +116,8 @@ function AdminDashboardView() {
       },
       {
         id: '4',
-        name: 'Alice Williams',
-        email: 'alice@example.com',
+        name: 'Ananya Iyer',
+        email: 'ananya.iyer@example.com',
         membershipStatus: 'active',
         membershipPlan: 'Premium',
         membershipExpiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
@@ -122,14 +128,191 @@ function AdminDashboardView() {
       },
       {
         id: '5',
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
+        name: 'Karthik Nair',
+        email: 'karthik.nair@example.com',
         membershipStatus: 'pending',
         membershipPlan: 'Basic',
         membershipExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         feeStatus: 'pending',
         totalCheckIns: 0,
         joinDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '6',
+        name: 'Sneha Desai',
+        email: 'sneha.desai@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 52,
+        joinDate: new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '7',
+        name: 'Rohan Malhotra',
+        email: 'rohan.malhotra@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Elite',
+        membershipExpiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 89,
+        joinDate: new Date(Date.now() - 300 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '8',
+        name: 'Kavya Rao',
+        email: 'kavya.rao@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Basic',
+        membershipExpiresAt: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 28,
+        joinDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '9',
+        name: 'Aditya Joshi',
+        email: 'aditya.joshi@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 41,
+        joinDate: new Date(Date.now() - 100 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '10',
+        name: 'Meera Nair',
+        email: 'meera.nair@example.com',
+        membershipStatus: 'expired',
+        membershipPlan: 'Basic',
+        membershipExpiresAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'overdue',
+        totalCheckIns: 15,
+        joinDate: new Date(Date.now() - 200 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '11',
+        name: 'Vikram Shetty',
+        email: 'vikram.shetty@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Elite',
+        membershipExpiresAt: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 76,
+        joinDate: new Date(Date.now() - 250 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '12',
+        name: 'Pooja Iyer',
+        email: 'pooja.iyer@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 33,
+        joinDate: new Date(Date.now() - 80 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '13',
+        name: 'Suresh Kumar',
+        email: 'suresh.kumar@example.com',
+        membershipStatus: 'pending',
+        membershipPlan: 'Basic',
+        membershipExpiresAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'pending',
+        totalCheckIns: 0,
+        joinDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '14',
+        name: 'Anjali Reddy',
+        email: 'anjali.reddy@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() + 50 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 58,
+        joinDate: new Date(Date.now() - 130 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '15',
+        name: 'Rajesh Patel',
+        email: 'rajesh.patel@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Elite',
+        membershipExpiresAt: new Date(Date.now() + 100 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 94,
+        joinDate: new Date(Date.now() - 280 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '16',
+        name: 'Divya Menon',
+        email: 'divya.menon@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Basic',
+        membershipExpiresAt: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 24,
+        joinDate: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '17',
+        name: 'Amit Shah',
+        email: 'amit.shah@example.com',
+        membershipStatus: 'expired',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'overdue',
+        totalCheckIns: 37,
+        joinDate: new Date(Date.now() - 170 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '18',
+        name: 'Neha Gupta',
+        email: 'neha.gupta@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Premium',
+        membershipExpiresAt: new Date(Date.now() + 40 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 49,
+        joinDate: new Date(Date.now() - 110 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '19',
+        name: 'Ravi Verma',
+        email: 'ravi.verma@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Elite',
+        membershipExpiresAt: new Date(Date.now() + 75 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 82,
+        joinDate: new Date(Date.now() - 220 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '20',
+        name: 'Shreya Kapoor',
+        email: 'shreya.kapoor@example.com',
+        membershipStatus: 'active',
+        membershipPlan: 'Basic',
+        membershipExpiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+        feeStatus: 'paid',
+        lastPaymentDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCheckIns: 19,
+        joinDate: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(),
       },
     ];
     setMembers(mockMembers);
@@ -138,8 +321,8 @@ function AdminDashboardView() {
     const mockTrainers: Trainer[] = [
       {
         id: 't1',
-        name: 'Sarah Johnson',
-        email: 'sarah@example.com',
+        name: 'Meera Krishnan',
+        email: 'meera.krishnan@example.com',
         totalClasses: 48,
         upcomingClasses: 12,
         totalAttendees: 456,
@@ -148,8 +331,8 @@ function AdminDashboardView() {
       },
       {
         id: 't2',
-        name: 'Mike Chen',
-        email: 'mike@example.com',
+        name: 'Vikram Singh',
+        email: 'vikram.singh@example.com',
         totalClasses: 36,
         upcomingClasses: 8,
         totalAttendees: 312,
@@ -158,8 +341,8 @@ function AdminDashboardView() {
       },
       {
         id: 't3',
-        name: 'Emma Davis',
-        email: 'emma@example.com',
+        name: 'Divya Menon',
+        email: 'divya.menon@example.com',
         totalClasses: 42,
         upcomingClasses: 10,
         totalAttendees: 389,
@@ -252,13 +435,51 @@ function AdminDashboardView() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-4xl font-medium tracking-tight text-white">
-          Admin Dashboard
-        </h1>
-        <p className="mt-2 text-base text-gray-300">
-          Overview of your gym operations and analytics
-        </p>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-white">
+              Admin Dashboard
+            </h1>
+            {selectedBranch && (
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-primary-500/20 border border-primary-500/30 rounded-lg w-fit">
+                <BuildingOfficeIcon className="h-4 w-4 text-primary-400" />
+                <span className="text-xs sm:text-sm font-semibold text-primary-400 truncate max-w-[200px] sm:max-w-none">{selectedBranch.name}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <p className="text-sm sm:text-base text-gray-300">
+              Overview of your gym operations and analytics
+            </p>
+            {selectedBranch && (
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-400">
+                <MapPinIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>{selectedBranch.city}, {selectedBranch.state}</span>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {hasMultipleBranches() && (
+            <Button 
+              variant="outline" 
+              onClick={() => setIsBranchSelectModalOpen(true)}
+              className="bg-transparent border-secondary-500 text-secondary-400 hover:bg-secondary-500/20 hover:border-secondary-400 hover:text-secondary-300 text-xs sm:text-sm px-3 sm:px-4"
+            >
+              Switch Branch
+            </Button>
+          )}
+          {hasMultipleBranches() && (
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/admin/branches')}
+              className="bg-transparent border-primary-500 text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-300 text-xs sm:text-sm px-3 sm:px-4"
+            >
+              All Branches
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Metrics */}
@@ -281,13 +502,13 @@ function AdminDashboardView() {
 
       {/* Members Management Overview */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Members Management</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Members Management</h2>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => navigate('/admin')}
-            className="bg-primary-500/20 !text-[#b475ff] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white"
+            className="bg-primary-500/20 !text-[#b475ff] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white w-full sm:w-auto"
           >
             Manage
           </Button>
@@ -395,13 +616,13 @@ function AdminDashboardView() {
 
       {/* Trainers Overview */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Trainers Overview</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Trainers Overview</h2>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => navigate('/admin')}
-            className="bg-primary-500/20 text-[#B475FF] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white"
+            className="bg-primary-500/20 text-[#B475FF] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white w-full sm:w-auto"
           >
             Manage
           </Button>
@@ -447,8 +668,8 @@ function AdminDashboardView() {
 
       {/* Attendance Analytics */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Attendance Analytics</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Attendance Analytics</h2>
           <div className="flex gap-2">
             {(['7d', '30d', '90d'] as const).map((range) => (
               <button
@@ -523,13 +744,13 @@ function AdminDashboardView() {
 
       {/* Revenue Analytics */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Revenue Analytics</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Revenue Analytics</h2>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => navigate('/admin')}
-            className="bg-primary-500/20 text-[#B475FF] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white"
+            className="bg-primary-500/20 text-[#B475FF] border-primary-500 hover:bg-transparent hover:border-primary-500/50 hover:text-white w-full sm:w-auto"
           >
             View Details
           </Button>
@@ -605,6 +826,125 @@ function AdminDashboardView() {
           </ResponsiveContainer>
         </div>
       </Card>
+
+      {/* Branch Selection Modal */}
+      <Modal
+        isOpen={isBranchSelectModalOpen}
+        onClose={() => setIsBranchSelectModalOpen(false)}
+        title="Switch Branch"
+        size="lg"
+      >
+        <div className="space-y-6">
+          <div className="text-center">
+            <p className="text-gray-300 font-medium">
+              Choose a branch to manage
+            </p>
+          </div>
+
+          <div className="flex justify-center mb-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsBranchSelectModalOpen(false);
+                navigate('/admin/branches');
+              }}
+              className="bg-transparent border-primary-500 text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-300"
+            >
+              View All Branches Dashboard
+            </Button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 max-h-[60vh] overflow-y-auto">
+            {branches.map((branch) => (
+              <Card
+                key={branch.id}
+                hover
+                className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/20"
+                onClick={() => {
+                  selectBranch(branch);
+                  setIsBranchSelectModalOpen(false);
+                  showToast({
+                    variant: 'success',
+                    title: 'Branch switched',
+                    description: `Switched to ${branch.name}`,
+                  });
+                }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-primary-500/20 rounded-lg border border-primary-500/30">
+                        <BuildingOfficeIcon className="h-6 w-6 text-primary-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{branch.name}</h3>
+                        <div className="flex items-center gap-1 mt-1">
+                          <MapPinIcon className="h-4 w-4 text-gray-400" />
+                          <p className="text-sm text-gray-400">{branch.city}, {branch.state}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
+                        branch.status === 'active'
+                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          : branch.status === 'maintenance'
+                          ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                          : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                      }`}
+                    >
+                      {branch.status}
+                    </span>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-800">
+                    <p className="text-sm text-gray-400 mb-1">{branch.address}</p>
+                    {branch.phone && (
+                      <p className="text-sm text-gray-400">{branch.phone}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-800">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <UsersIcon className="h-4 w-4 text-primary-400" />
+                        <p className="text-xs text-gray-500">Members</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">{branch.totalMembers}</p>
+                      <p className="text-xs text-emerald-400">{branch.activeMembers} active</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <UserGroupIcon className="h-4 w-4 text-secondary-400" />
+                        <p className="text-xs text-gray-500">Trainers</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">{branch.totalTrainers}</p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          selectBranch(branch);
+                          setIsBranchSelectModalOpen(false);
+                          showToast({
+                            variant: 'success',
+                            title: 'Branch switched',
+                            description: `Switched to ${branch.name}`,
+                          });
+                        }}
+                        className="w-full bg-primary-500 hover:bg-primary-600 text-white"
+                      >
+                        Select
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -744,10 +1084,10 @@ function TrainerDashboardView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-4xl font-medium tracking-tight text-white">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-white">
           Trainer Overview
         </h1>
-        <p className="mt-2 text-base text-gray-300">
+        <p className="mt-2 text-sm sm:text-base text-gray-300">
           Insights and performance for your upcoming classes
         </p>
       </div>
@@ -793,12 +1133,12 @@ function TrainerDashboardView() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 bg-[#0a0a0a] border border-[#252525]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
             <div>
-              <h2 className="text-xl font-semibold text-white">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">
                 Attendance Trend (Last 7 Days)
               </h2>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-xs sm:text-sm text-gray-400 mt-1">
                 Monitor how many members attend your sessions
               </p>
             </div>
@@ -867,9 +1207,9 @@ function TrainerDashboardView() {
       </div>
 
       <Card className="bg-[#0a0a0a] border border-[#252525]">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Today's Schedule</h2>
-          <Button variant="ghost" size="sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Today's Schedule</h2>
+          <Button variant="ghost" size="sm" className="w-full sm:w-auto">
             Export
           </Button>
         </div>
@@ -927,9 +1267,9 @@ function TrainerDashboardView() {
 
       {upcomingClasses.length > 0 && (
         <Card className="bg-[#0a0a0a] border border-[#252525]">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-white">Next 7 Days</h2>
-            <Button variant="ghost" size="sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-white">Next 7 Days</h2>
+            <Button variant="ghost" size="sm" className="w-full sm:w-auto">
               View calendar
             </Button>
           </div>
@@ -978,6 +1318,7 @@ function TrainerDashboardView() {
 // Regular User Dashboard Component
 function UserDashboardView() {
   const { user } = useAuthStore();
+  const { selectedBranch } = useBranchStore();
   const [weightData, setWeightData] = useState<Array<{ date: string; weight: number }>>([]);
   const [membershipProgress, setMembershipProgress] = useState({ daysCompleted: 0, totalDays: 30, daysRemaining: 0 });
 
@@ -1038,7 +1379,7 @@ function UserDashboardView() {
       id: '1',
       type: 'Yoga',
       time: '09:00',
-      trainer: 'Sarah Johnson',
+      trainer: 'Meera Krishnan',
       booked: 12,
       capacity: 20,
     },
@@ -1046,7 +1387,7 @@ function UserDashboardView() {
       id: '2',
       type: 'HIIT',
       time: '18:00',
-      trainer: 'Alex Rivera',
+      trainer: 'Rohit Kapoor',
       booked: 18,
       capacity: 20,
     },
@@ -1076,12 +1417,28 @@ function UserDashboardView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-4xl font-medium tracking-tight text-white">
-          Hey {user?.name?.split(' ')[0]}, ready for your next win?
-        </h1>
-        <p className="mt-2 text-base text-gray-300">
-          Here's what's happening today inside GymVerse
-        </p>
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-4xl font-medium tracking-tight text-white">
+            Hey {user?.name?.split(' ')[0]}, ready for your next win?
+          </h1>
+          {selectedBranch && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-500/20 border border-primary-500/30 rounded-lg">
+              <BuildingOfficeIcon className="h-4 w-4 text-primary-400" />
+              <span className="text-sm font-semibold text-primary-400">{selectedBranch.name}</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <p className="text-base text-gray-300">
+            Here's what's happening today inside GymVerse
+          </p>
+          {selectedBranch && (
+            <div className="flex items-center gap-1 text-sm text-gray-400">
+              <MapPinIcon className="h-4 w-4" />
+              <span>{selectedBranch.city}, {selectedBranch.state}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Membership Card */}

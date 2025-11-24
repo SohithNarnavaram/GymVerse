@@ -5,6 +5,7 @@ import {
   UserPlusIcon,
   SparklesIcon,
   ArrowPathIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -13,6 +14,7 @@ import Input from '@/components/ui/Input';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import { useToast } from '@/components/ui/Toast';
 import { useAuthStore } from '@/store/authStore';
+import { useBranchStore } from '@/store/branchStore';
 
 interface AssignedMember {
   id: string;
@@ -84,6 +86,7 @@ const initialTasks: ControlTask[] = [
 
 export default function TrainerDashboard() {
   const { user } = useAuthStore();
+  const { selectedBranch } = useBranchStore();
   const { showToast } = useToast();
   const [members] = useState<AssignedMember[]>(initialMembers);
   const [tasks, setTasks] = useState<ControlTask[]>(initialTasks);
@@ -124,10 +127,26 @@ export default function TrainerDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black text-white tracking-tight">Trainer Control Panel</h1>
-        <p className="mt-2 text-gray-300 font-medium">
-          Manage your profile, members, and daily operations
-        </p>
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-3xl font-black text-white tracking-tight">Trainer Control Panel</h1>
+          {selectedBranch && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-500/20 border border-primary-500/30 rounded-lg">
+              <BuildingOfficeIcon className="h-4 w-4 text-primary-400" />
+              <span className="text-sm font-semibold text-primary-400">{selectedBranch.name}</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <p className="text-gray-300 font-medium">
+            Manage your profile, members, and daily operations
+          </p>
+          {selectedBranch && (
+            <div className="flex items-center gap-1 text-sm text-gray-400">
+              <MapPinIcon className="h-4 w-4" />
+              <span>{selectedBranch.city}, {selectedBranch.state}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Profile & Overview */}

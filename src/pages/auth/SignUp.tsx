@@ -69,7 +69,7 @@ export default function SignUp() {
       if (selectedRole === 'admin') {
         navigate('/dashboard');
       } else if (selectedRole === 'trainer') {
-        navigate('/trainer');
+        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }
@@ -123,7 +123,7 @@ export default function SignUp() {
               required
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="John Doe"
+              placeholder="Rahul Sharma"
               autoComplete="name"
             />
 

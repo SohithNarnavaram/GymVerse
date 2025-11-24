@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { TrashIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, ChevronDownIcon, BuildingOfficeIcon, MapPinIcon, UsersIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import Input from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
+import { useBranchStore } from '@/store/branchStore';
+import type { Branch } from '@/types';
 
 interface Member {
   id: string;
@@ -38,6 +40,7 @@ interface Trainer {
 export default function AdminDashboard() {
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const { selectedBranch, branches, hasMultipleBranches, selectBranch } = useBranchStore();
   
   // Modals
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -46,6 +49,7 @@ export default function AdminDashboard() {
   const [isEditMemberModalOpen, setIsEditMemberModalOpen] = useState(false);
   const [isEditTrainerModalOpen, setIsEditTrainerModalOpen] = useState(false);
   const [isDeleteMemberModalOpen, setIsDeleteMemberModalOpen] = useState(false);
+  const [isBranchSelectModalOpen, setIsBranchSelectModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null);
   const [deletingMember, setDeletingMember] = useState<Member | null>(null);
@@ -92,8 +96,8 @@ export default function AdminDashboard() {
     const mockMembers: Member[] = [
       {
         id: '1',
-        name: 'John Doe',
-        email: 'john@example.com',
+        name: 'Rahul Sharma',
+        email: 'rahul.sharma@example.com',
         phone: '+91 98765 43210',
         membershipStatus: 'active',
         membershipPlan: 'Premium',
@@ -105,9 +109,9 @@ export default function AdminDashboard() {
       },
       {
         id: '2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        phone: '+1 234-567-8901',
+        name: 'Priya Patel',
+        email: 'priya.patel@example.com',
+        phone: '+91 98765 43211',
         membershipStatus: 'active',
         membershipPlan: 'Elite',
         membershipExpiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
@@ -118,9 +122,9 @@ export default function AdminDashboard() {
       },
       {
         id: '3',
-        name: 'Bob Johnson',
-        email: 'bob@example.com',
-        phone: '+1 234-567-8902',
+        name: 'Arjun Reddy',
+        email: 'arjun.reddy@example.com',
+        phone: '+91 98765 43212',
         membershipStatus: 'expired',
         membershipPlan: 'Basic',
         membershipExpiresAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
@@ -130,9 +134,9 @@ export default function AdminDashboard() {
       },
       {
         id: '4',
-        name: 'Alice Williams',
-        email: 'alice@example.com',
-        phone: '+1 234-567-8903',
+        name: 'Ananya Iyer',
+        email: 'ananya.iyer@example.com',
+        phone: '+91 98765 43213',
         membershipStatus: 'active',
         membershipPlan: 'Premium',
         membershipExpiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
@@ -143,9 +147,9 @@ export default function AdminDashboard() {
       },
       {
         id: '5',
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
-        phone: '+1 234-567-8904',
+        name: 'Karthik Nair',
+        email: 'karthik.nair@example.com',
+        phone: '+91 98765 43214',
         membershipStatus: 'pending',
         membershipPlan: 'Basic',
         membershipExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -160,9 +164,9 @@ export default function AdminDashboard() {
     const mockTrainers: Trainer[] = [
       {
         id: 't1',
-        name: 'Sarah Johnson',
-        email: 'sarah@example.com',
-        phone: '+1 234-567-8910',
+        name: 'Meera Krishnan',
+        email: 'meera.krishnan@example.com',
+        phone: '+91 98765 45670',
         totalClasses: 48,
         upcomingClasses: 12,
         totalAttendees: 456,
@@ -172,9 +176,9 @@ export default function AdminDashboard() {
       },
       {
         id: 't2',
-        name: 'Mike Chen',
-        email: 'mike@example.com',
-        phone: '+1 234-567-8911',
+        name: 'Vikram Singh',
+        email: 'vikram.singh@example.com',
+        phone: '+91 98765 45671',
         totalClasses: 36,
         upcomingClasses: 8,
         totalAttendees: 312,
@@ -184,9 +188,9 @@ export default function AdminDashboard() {
       },
       {
         id: 't3',
-        name: 'Emma Davis',
-        email: 'emma@example.com',
-        phone: '+1 234-567-8912',
+        name: 'Divya Menon',
+        email: 'divya.menon@example.com',
+        phone: '+91 98765 45672',
         totalClasses: 42,
         upcomingClasses: 10,
         totalAttendees: 389,
@@ -390,10 +394,44 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Admin Control Panel</h1>
-          <p className="mt-2 text-gray-300 font-medium">Manage members, trainers, and operations</p>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-black text-white tracking-tight">Admin Control Panel</h1>
+            {selectedBranch && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-500/20 border border-primary-500/30 rounded-lg">
+                <BuildingOfficeIcon className="h-4 w-4 text-primary-400" />
+                <span className="text-sm font-semibold text-primary-400">{selectedBranch.name}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <p className="text-gray-300 font-medium">Manage members, trainers, and operations</p>
+            {selectedBranch && (
+              <div className="flex items-center gap-1 text-sm text-gray-400">
+                <MapPinIcon className="h-4 w-4" />
+                <span>{selectedBranch.city}, {selectedBranch.state}</span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex gap-2">
+          {hasMultipleBranches() && (
+            <Button 
+              variant="outline" 
+              onClick={() => setIsBranchSelectModalOpen(true)}
+              className="bg-transparent border-secondary-500 text-secondary-400 hover:bg-secondary-500/20 hover:border-secondary-400 hover:text-secondary-300"
+            >
+              Switch Branch
+            </Button>
+          )}
+          {hasMultipleBranches() && (
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/admin/branches')}
+              className="bg-transparent border-primary-500 text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-300"
+            >
+              All Branches
+            </Button>
+          )}
           <Button 
             variant="outline" 
             onClick={() => navigate('/dashboard')}
@@ -401,16 +439,16 @@ export default function AdminDashboard() {
           >
             View Dashboard
           </Button>
-        <Button onClick={() => setIsExportModalOpen(true)}>Export Data</Button>
-      </div>
+          <Button onClick={() => setIsExportModalOpen(true)}>Export Data</Button>
+        </div>
       </div>
 
 
       {/* Members Management */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Members Management</h2>
-          <Button onClick={() => setIsAddMemberModalOpen(true)}>Add Member</Button>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Members Management</h2>
+          <Button onClick={() => setIsAddMemberModalOpen(true)} className="w-full sm:w-auto">Add Member</Button>
         </div>
         
         {/* Search and Filter */}
@@ -711,14 +749,14 @@ export default function AdminDashboard() {
             label="Full Name"
             value={memberFormData.name}
             onChange={(e) => setMemberFormData({ ...memberFormData, name: e.target.value })}
-            placeholder="John Doe"
+            placeholder="Rahul Sharma"
           />
           <Input
             label="Email"
             type="email"
             value={memberFormData.email}
             onChange={(e) => setMemberFormData({ ...memberFormData, email: e.target.value })}
-            placeholder="john@example.com"
+            placeholder="rahul.sharma@example.com"
           />
           <Input
             label="Phone"
@@ -846,14 +884,14 @@ export default function AdminDashboard() {
             label="Full Name"
             value={trainerFormData.name}
             onChange={(e) => setTrainerFormData({ ...trainerFormData, name: e.target.value })}
-            placeholder="Sarah Johnson"
+            placeholder="Meera Krishnan"
           />
           <Input
             label="Email"
             type="email"
             value={trainerFormData.email}
             onChange={(e) => setTrainerFormData({ ...trainerFormData, email: e.target.value })}
-            placeholder="sarah@example.com"
+            placeholder="meera.krishnan@example.com"
           />
           <Input
             label="Phone"
@@ -1027,6 +1065,125 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Branch Selection Modal */}
+      <Modal
+        isOpen={isBranchSelectModalOpen}
+        onClose={() => setIsBranchSelectModalOpen(false)}
+        title="Switch Branch"
+        size="lg"
+      >
+        <div className="space-y-6">
+          <div className="text-center">
+            <p className="text-gray-300 font-medium">
+              Choose a branch to manage
+            </p>
+          </div>
+
+          <div className="flex justify-center mb-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsBranchSelectModalOpen(false);
+                navigate('/admin/branches');
+              }}
+              className="bg-transparent border-primary-500 text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-300"
+            >
+              View All Branches Dashboard
+            </Button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 max-h-[60vh] overflow-y-auto">
+            {branches.map((branch) => (
+              <Card
+                key={branch.id}
+                hover
+                className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/20"
+                onClick={() => {
+                  selectBranch(branch);
+                  setIsBranchSelectModalOpen(false);
+                  showToast({
+                    variant: 'success',
+                    title: 'Branch switched',
+                    description: `Switched to ${branch.name}`,
+                  });
+                }}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-primary-500/20 rounded-lg border border-primary-500/30">
+                        <BuildingOfficeIcon className="h-6 w-6 text-primary-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{branch.name}</h3>
+                        <div className="flex items-center gap-1 mt-1">
+                          <MapPinIcon className="h-4 w-4 text-gray-400" />
+                          <p className="text-sm text-gray-400">{branch.city}, {branch.state}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
+                        branch.status === 'active'
+                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          : branch.status === 'maintenance'
+                          ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                          : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                      }`}
+                    >
+                      {branch.status}
+                    </span>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-800">
+                    <p className="text-sm text-gray-400 mb-1">{branch.address}</p>
+                    {branch.phone && (
+                      <p className="text-sm text-gray-400">{branch.phone}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-800">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <UsersIcon className="h-4 w-4 text-primary-400" />
+                        <p className="text-xs text-gray-500">Members</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">{branch.totalMembers}</p>
+                      <p className="text-xs text-emerald-400">{branch.activeMembers} active</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <UserGroupIcon className="h-4 w-4 text-secondary-400" />
+                        <p className="text-xs text-gray-500">Trainers</p>
+                      </div>
+                      <p className="text-lg font-bold text-white">{branch.totalTrainers}</p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          selectBranch(branch);
+                          setIsBranchSelectModalOpen(false);
+                          showToast({
+                            variant: 'success',
+                            title: 'Branch switched',
+                            description: `Switched to ${branch.name}`,
+                          });
+                        }}
+                        className="w-full bg-primary-500 hover:bg-primary-600 text-white"
+                      >
+                        Select
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
       </Modal>
     </div>
   );

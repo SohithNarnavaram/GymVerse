@@ -136,3 +136,24 @@ export interface UserPreferences {
   };
 }
 
+export interface Branch {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  state?: string;
+  zipCode?: string;
+  phone?: string;
+  email?: string;
+  managerId?: string;
+  managerName?: string;
+  totalMembers: number;
+  activeMembers: number;
+  totalTrainers: number;
+  status: 'active' | 'inactive' | 'maintenance';
+  createdAt: string; // ISO date
+  imageUrl?: string;
+  rating?: number; // 0-5 rating
+  totalReviews?: number; // Total number of reviews
+}
+

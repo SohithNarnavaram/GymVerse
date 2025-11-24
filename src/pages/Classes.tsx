@@ -25,10 +25,10 @@ const CLASS_CATEGORIES = ['Yoga', 'HIIT', 'Boxing', 'Dance', 'Pilates', 'Aerobic
 
 // Mock trainers list
 const MOCK_TRAINERS = [
-  { id: 't1', name: 'Sarah Johnson' },
-  { id: 't2', name: 'Alex Rivera' },
-  { id: 't3', name: 'Mike Chen' },
-  { id: 't4', name: 'Emma Davis' },
+  { id: 't1', name: 'Meera Krishnan' },
+  { id: 't2', name: 'Vikram Singh' },
+  { id: 't3', name: 'Divya Menon' },
+  { id: 't4', name: 'Rohit Kapoor' },
 ];
 
 export default function Classes() {
@@ -73,13 +73,13 @@ export default function Classes() {
         id: '1',
         type: 'Yoga',
         trainerId: 't1',
-        trainerName: 'Sarah Johnson',
+        trainerName: 'Meera Krishnan',
         capacity: 20,
         booked: 12,
         waitlist: 0,
         startTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
         endTime: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(),
-        location: 'Studio A',
+        location: 'Main Studio',
         description: 'Gentle flow yoga for all levels',
         createdAt: addDays(new Date(), -1).toISOString(),
       },
@@ -87,13 +87,13 @@ export default function Classes() {
         id: '2',
         type: 'HIIT',
         trainerId: 't2',
-        trainerName: 'Alex Rivera',
+        trainerName: 'Rohit Kapoor',
         capacity: 20,
         booked: 18,
         waitlist: 2,
         startTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
         endTime: new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString(),
-        location: 'Studio B',
+        location: 'Cardio Studio',
         description: 'High-intensity interval training',
         createdAt: addDays(new Date(), -2).toISOString(),
       },
@@ -101,13 +101,13 @@ export default function Classes() {
         id: '3',
         type: 'Boxing',
         trainerId: 't3',
-        trainerName: 'Mike Chen',
+        trainerName: 'Vikram Singh',
         capacity: 15,
         booked: 8,
         waitlist: 0,
         startTime: addDays(new Date(), 1).toISOString(),
         endTime: addDays(new Date(), 1).toISOString(),
-        location: 'Boxing Ring',
+        location: 'Boxing Arena',
         description: 'Boxing fundamentals and conditioning',
         createdAt: addDays(new Date(), -7).toISOString(),
       },
@@ -115,13 +115,13 @@ export default function Classes() {
         id: '4',
         type: 'Dance',
         trainerId: 't4',
-        trainerName: 'Emma Davis',
+        trainerName: 'Divya Menon',
         capacity: 25,
         booked: 22,
         waitlist: 5,
         startTime: addDays(new Date(), 1).toISOString(),
         endTime: addDays(new Date(), 1).toISOString(),
-        location: 'Dance Studio',
+        location: 'Dance Hall',
         description: 'Fun and energetic dance workout',
         createdAt: addDays(new Date(), -12).toISOString(),
       },
@@ -915,7 +915,7 @@ export default function Classes() {
             <Input
               value={classFormData.location}
               onChange={(e) => setClassFormData({ ...classFormData, location: e.target.value })}
-              placeholder="e.g., Studio A"
+              placeholder="e.g., Main Studio"
             />
           </div>
           <div>
@@ -1024,7 +1024,7 @@ export default function Classes() {
             <Input
               value={classFormData.location}
               onChange={(e) => setClassFormData({ ...classFormData, location: e.target.value })}
-              placeholder="e.g., Studio A"
+              placeholder="e.g., Main Studio"
             />
           </div>
           <div>

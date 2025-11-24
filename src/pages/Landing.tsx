@@ -73,25 +73,25 @@ export default function Landing() {
   const trainers = [
     {
       id: '1',
-      name: 'Sarah Johnson',
+      name: 'Meera Krishnan',
       specialty: 'Yoga & Pilates',
       image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: '2',
-      name: 'Mike Chen',
+      name: 'Vikram Singh',
       specialty: 'Boxing & Strength',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: '3',
-      name: 'Emma Davis',
+      name: 'Divya Menon',
       specialty: 'Dance & Cardio',
       image: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: '4',
-      name: 'Alex Rivera',
+      name: 'Rohit Kapoor',
       specialty: 'HIIT & CrossFit',
       image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
     },

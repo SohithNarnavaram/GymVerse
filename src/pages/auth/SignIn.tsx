@@ -29,7 +29,7 @@ export default function SignIn() {
       const mockUser = {
         id: '1',
         email: formData.email,
-        name: 'John Doe',
+        name: 'Rahul Sharma',
         role: selectedRole,
         createdAt: new Date().toISOString(),
       };
@@ -44,7 +44,7 @@ export default function SignIn() {
       if (selectedRole === 'admin') {
         navigate('/dashboard');
       } else if (selectedRole === 'trainer') {
-        navigate('/trainer');
+        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }
