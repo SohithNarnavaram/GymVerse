@@ -48,16 +48,15 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   // If branches are loaded and admin has multiple branches but no branch is selected, redirect to selection
+  // Use a small delay to ensure branches have time to load
   if (branches.length > 0 && hasMultipleBranches() && !selectedBranch) {
     return <Navigate to="/admin/branches/select" replace />;
   }
 
-  // If branches are loaded and there's only one branch, auto-select it
-  if (branches.length === 1 && !selectedBranch) {
-    // This will be handled by the branch selection page
-    return <>{children}</>;
-  }
-
+  // Allow access in all other cases:
+  // - Branches haven't loaded yet (will load in Layout component)
+  // - Only one branch exists (will auto-select in useBranchInit)
+  // - Branch is already selected
   return <>{children}</>;
 }
 
